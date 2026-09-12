@@ -1,6 +1,6 @@
 # Primtal
 
-Personal wellbeing check-ins in Ambiguous, with OpenRouter for model access and CopilotKit for the companion interface. Built for the Valencia AI Tinkerers hackathon.
+Personal wellbeing check-ins in Ambiguous, with OpenRouter for model access and a companion web interface. Built for the Valencia AI Tinkerers hackathon.
 
 ## Use Primtal online
 
@@ -10,7 +10,7 @@ Open your own private conversation with Primtal in Ambiguous, share your calenda
 
 ## Current status
 
-[Private setup page](https://primtal-agent.aicreatormax.chatgpt.site) — published for the owner. It validates and encrypts provider keys and includes a CopilotKit chat backed by OpenRouter once credentials are saved.
+[Private setup page](https://primtal-agent.aicreatormax.chatgpt.site) — published for the owner. It validates and encrypts provider keys and includes a setup chat backed by OpenRouter once credentials are saved.
 
 The cloud application includes per-person check-ins with native choice buttons, encrypted storage, one-time web pairing, daily reminders, optional PHQ-9/GAD-7 follow-ups, calendar approval and undo, and the team logo. Six daily answers run without model calls. The setup panel also offers clearly marked synthetic history for presentations and calendar pattern comparisons. Calendar changes require each participant's Editor grant and confirmation. BAT-12, ASRS and the full technostress instrument are currently unavailable.
 
@@ -39,4 +39,4 @@ Cloud runtime: Cloudflare Workers + D1. The hosting manifest deliberately exclud
 
 ## Origin
 
-Based on [DMercedesGarcia/Primtal](https://github.com/DMercedesGarcia/Primtal). Original MIT license and early Slack-oriented BRD/TRD are retained. The implementation agreement records the newer Ambiguous direction.
+Based on [DMercedesGarcia/Primtal](https://github.com/DMercedesGarcia/Primtal). The original MIT license is retained. The implementation agreement records the newer Ambiguous direction.

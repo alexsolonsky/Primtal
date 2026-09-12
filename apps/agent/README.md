@@ -1,6 +1,6 @@
 # Primtal cloud application
 
-Ambiguous DMs + personal calendars, OpenRouter, CopilotKit and encrypted D1 storage.
+Ambiguous DMs + personal calendars, OpenRouter, a companion web assistant and encrypted D1 storage.
 
 Read [Demo guide](docs/DEMO-GUIDE.md) for setup, per-person consent, pairing, remote launch, background activation and event approval/undo. [Screeners](docs/SCREENERS.md) records verified sources and remaining questionnaire limitations.
 

@@ -73,4 +73,4 @@ If the site owner grants you panel access, sign in with your own account, select
 
 The shared deployment needs saved Ambiguous and OpenRouter credentials and **Enable background bot** activated in the panel. Credentials are encrypted on the server and stay out of GitHub. Ambiguous message automations and a minute schedule call the hosted Worker. Active choice cards use bounded background polling; no local tunnel or computer process is involved. API quotas and provider availability can still affect response times.
 
-CopilotKit powers **Primtal assistant** in the web panel. Ambiguous provides the direct-message interface; the Primtal backend handles check-ins, storage and calendar actions.
+**Primtal assistant** provides setup help in the web panel. Ambiguous provides the direct-message interface; the Primtal backend handles check-ins, storage and calendar actions.

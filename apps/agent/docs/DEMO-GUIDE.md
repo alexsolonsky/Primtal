@@ -26,7 +26,7 @@ A classifier failure or ambiguous note pauses calendar actions. PHQ-9 and GAD-7 
 - Ambiguous: private conversations, native choice cards, calendars and automations.
 - Primtal Worker + D1: participant isolation, encrypted storage, deterministic questions, history comparison, confirmation and undo.
 - OpenRouter: optional text routing and the web assistant. The selected free endpoint is `nex-agi/nex-n2.5-mini:free`; paid fallback is disabled.
-- CopilotKit: setup assistant in the web panel. It has no calendar action tools; use the bot or panel controls.
+- Web panel: setup assistant. It has no calendar action tools; use the bot or panel controls.
 
 The six answer selections and history comparison make zero model calls. Background processing continues with the panel and all local computers closed. External API availability and quotas still affect responsiveness.
 
