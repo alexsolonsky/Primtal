@@ -1,0 +1,8 @@
+import {runtime,hash} from '@/lib/primtal/store';
+import {connection,availableBotKey,saveConnection} from '@/lib/primtal/connections';
+import {amb} from '@/lib/primtal/ambiguous';
+import {completion} from '@/lib/primtal/openrouter';
+import {runOnce} from '@/lib/primtal/runner';
+import {ensureAutomation} from '@/lib/primtal/automation';
+export const dynamic='force-dynamic';
+export async function POST(request:Request){const expected=runtime('SITES_DISPATCH_TOKEN');if(!expected||await hash(request.headers.get('X-Primtal-Runner')||'')!==await hash(expected))return Response.json({error:'Unauthorized'},{status:401});try{const {mode}=await request.json() as {mode:string};if(mode==='verify'){const c=await connection();let botStatus='missing',modelStatus='missing';let name='';try{const b=await amb(availableBotKey(c?.data),'/api/users/me');botStatus=b.type==='agent'?'connected':'invalid identity';name=b.display_name||'';}catch(e){botStatus=e instanceof Error?e.message:'unavailable';}if(c?.data.openrouterKey){try{await completion({openrouterKey:c.data.openrouterKey,model:'openai/gpt-4o-mini'},'Return JSON with ok:true.','Connection test.');modelStatus='connected';}catch(e){modelStatus=e instanceof Error?e.message:'unavailable';}}return Response.json({botStatus,modelStatus,name});}if(mode==='activate')return Response.json(await ensureAutomation(new URL(request.url).origin));if(mode!=='tick')return Response.json({error:'Unknown operation'},{status:400});return Response.json(await runOnce());}catch(e){console.error('Primtal runner failed',{kind:e instanceof Error?e.name:'Error'});return Response.json({error:e instanceof Error?e.message:'Runner unavailable'},{status:503});}}

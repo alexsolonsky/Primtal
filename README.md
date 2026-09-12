@@ -6,7 +6,7 @@ Personal wellbeing check-ins in Ambiguous, with OpenRouter for model access and 
 
 [Private setup page](https://primtal-agent.aicreatormax.chatgpt.site) — published for the owner. It validates and encrypts provider keys and includes a CopilotKit chat backed by OpenRouter once credentials are saved.
 
-The complete bot demo is **still in progress**: team identity pairing, remote DM launch, a hosted scheduler, verified full questionnaires and live calendar acceptance testing remain unfinished. The published page is not the finished demo. Source builds and TypeScript checks passed for the published setup application; live model access requires the owner’s OpenRouter key.
+The cloud application includes per-person check-ins in Ambiguous, one-time web pairing, an authenticated remote demo button, a private Ambiguous automation for background processing, PHQ-9/GAD-7 follow-ups, calendar approval and undo, and the team logo. Build, TypeScript and workflow tests passed. Live operation still requires saved OpenRouter credentials and an activated runner; calendar writes require participant-granted Editor access. Live end-to-end acceptance testing is still pending. BAT-12, ASRS and the full technostress instrument are not active.
 
 ## Code and docs
 

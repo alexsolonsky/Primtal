@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# The web app keeps source modules in lib, unlike Python build artifacts.
+!apps/agent/lib/
+!apps/agent/lib/**
