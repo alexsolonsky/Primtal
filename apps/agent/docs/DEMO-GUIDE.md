@@ -4,7 +4,7 @@
 
 1. Open the hosted Primtal panel and sign in as its owner.
 2. Provider connections uses the saved Ambiguous agent key by default. Enter OpenRouter in its password field and select **Validate & save keys**. Validation makes one small model request so it also checks credit/model access. Successfully validated credentials are saved even if the other provider fails.
-3. Select **Enable background bot**. This creates one private automation owned by the Primtal agent inside Ambiguous: a schedule calls the protected Primtal runner for reminders. Instant event workflows wake it on new messages and votes. No health answers appear in the runner response. Keep the automation private: its definition contains a machine credential.
+3. Select **Enable background bot**. This creates one private automation owned by the Primtal agent inside Ambiguous: a schedule calls the protected Primtal runner for reminders. Instant event workflows wake it on new messages. Active native poll cards are checked in short Worker continuations. No health answers appear in the runner response. Keep the automation private: its definition contains a machine credential.
 
 ## Any team member
 
@@ -24,7 +24,7 @@ The owner can use **Create pairing command**, send the one-time code in their ow
 - `STOP`: end the check-in and pause reminders.
 - `DELETE MY DATA`: delete your stored Primtal answers, settings and web binding. Existing Ambiguous messages and calendar events are not deleted.
 
-New message and poll-vote events wake the bot after instant automation activation. The minute schedule remains a fallback and sends daily reminders. External service latency affects response time. The visible owner panel also polls every five seconds while open to make the demo responsive. It is not a replacement for activating the background automation. External service latency and quota may delay processing.
+New-message events wake the bot after instant automation activation. Ambiguous currently has no poll-vote EventBus trigger; active cards use bounded Worker continuations with a short polling interval and a single shared lease. The minute schedule remains a fallback and sends daily reminders. External service latency affects response time. The visible owner panel also polls every five seconds while open to make the demo responsive. It is not a replacement for activating the background automation. External service latency and quota may delay processing.
 
 ## Suggested live script
 
@@ -47,3 +47,5 @@ PHQ-9 and GAD-7 are supported. BAT-12, ASRS and a full technostress instrument a
 - Saturday/Sunday focus time is considered for today when the calendar already contains busy events.
 - Provider model selection is restricted to free OpenRouter endpoints. Reasoning is disabled, responses are bounded, and provider data collection remains denied. Rate limits or invalid classification responses pause note-based routing; paid fallback is disabled.
 - Demo-day seeding adds explicitly labeled private work blocks, skips existing conflicts, and records each write to prevent duplicates. It sends no invitations.
+
+The free model selected and live-tested on 2026-09-12 is `nex-agi/nex-n2.5-mini:free`. A small JSON request took 418 ms. This is one measurement, not a response-time guarantee. The second free candidate returned 429.
