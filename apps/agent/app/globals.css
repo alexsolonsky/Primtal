@@ -101,3 +101,5 @@ body{margin:0;background:var(--background);color:var(--foreground);font-family:A
 h3{font-size:20px;margin-top:24px}.check{display:flex;align-items:flex-start;gap:12px;font-size:14px}.check input{width:20px;height:20px;margin-top:4px;flex-shrink:0}.actions{margin:18px 0}.actions>*{flex:0 1 auto}.card pre{font-family:inherit;font-size:15px;line-height:1.65}summary{cursor:pointer}
 
 :root{--primary:#286044;--primary-foreground:#fff;--ring:#286044}.brand-logo{width:72px;height:72px;object-fit:cover;border-radius:18px}.eyebrow{color:#286044}.primary{background:#286044}.notice{background:#eef6ea}.shell header{color:#1f4332}
+
+.answer-options{display:grid;grid-template-columns:1fr;gap:.6rem;margin:1rem 0}.answer-options button{justify-content:flex-start;padding:1rem 1.2rem;min-height:52px;border-radius:16px;background:white;white-space:normal;text-align:left;border-color:#bed3c2}.answer-options button:hover{background:#e8f3e8;border-color:#447452}.answer-options button:focus-visible{outline:3px solid #578961;outline-offset:3px}

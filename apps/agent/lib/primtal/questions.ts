@@ -75,4 +75,7 @@ export const questions = [
 export type Domain = typeof questions[number]["construct"];
 export type State = "good" | "watch" | "concern";
 export function normalize(domain: Domain, value: number):State { if (!Number.isInteger(value)||value<1||value>5) throw new Error("Choose 1–5"); const severity = domain === "mood" || domain === "depression" ? 6-value : value; return severity >= 4 ? "concern" : severity===3 ? "watch" : "good"; }
-export function promptQuestion(index:number){const q=questions[index];return `**${index+1} of 6 · Daily check-in**\n${q.question}\n\n${Object.entries(q.scale_labels).map(([n,label])=>`${n}. ${label}`).join("\n")}\n\nReply with one number (1–5). Type STOP to end.`;}
+export const domainNames:Record<Domain,string>={mood:'Mood',depression:'Enjoyment',anxiety:'Calm',burnout:'Energy',adhd:'Focus',technostress:'Digital balance'};
+export function firstName(name?:string){return (name||'there').trim().split(/\s+/)[0].replace(/[<>{}\[\]*_`]/g,'').slice(0,35)||'there';}
+export function questionTitle(index:number,name?:string){const q=questions[index];return `🌿 ${firstName(name)} · ${domainNames[q.construct]} · ${index+1}/6\n${q.question}`;}
+export function promptQuestion(index:number,name?:string){const q=questions[index];return `**${firstName(name)}, a moment for you.**\n${index+1} of 6 · ${domainNames[q.construct]}\n\n**${q.question}**\n\n${Object.entries(q.scale_labels).map(([n,label])=>`${n}. ${label}`).join("\n")}\n\nChoose one option. STOP pauses your check-in.`;}
