@@ -1,3 +1,4 @@
+import {messageText} from './message-text';
 import {amb,assertDM,send} from './ambiguous';
 import {providers} from './connections';
 import {db,lock,type Config} from './store';
@@ -17,9 +18,9 @@ async function processDM(channelId:string,userId:string,name:string,c:Awaited<Re
   const cursor=session?.cursor||p?.cursor;
   const messages=await amb(c.botKey,`/api/channels/${channelId}/messages?limit=100${cursor?'&after='+encodeURIComponent(cursor):''}`);
   const incoming=(messages.data||[]).filter((m:Message)=>m.author?.id===userId&&!m.deleted_at&&!m.thread_id&&Date.parse(m.created_at)>= (p?.joined||Date.now()-600000)).sort((a:Message,b:Message)=>Date.parse(a.created_at)-Date.parse(b.created_at)||a.id.localeCompare(b.id));
-  if(!p){const m=incoming.find((m:Message)=>/^(PAIR [A-F0-9]{16}|DEMO|CHECKIN|START)$/i.test(m.content.trim()));if(!m)return;p={userId,channelId,calendarId:'',workspaceId:c.workspaceId,timezone:'Europe/Madrid',hour:'16:00',enabled:false,consent:false,support:'',joined:Date.parse(m.created_at),name};await savePerson(id,p);}
+  if(!p){const m=incoming.find((m:Message)=>/^(PAIR [A-F0-9]{16}|DEMO|CHECKIN|START)$/i.test(messageText(m.content)));if(!m)return;p={userId,channelId,calendarId:'',workspaceId:c.workspaceId,timezone:'Europe/Madrid',hour:'16:00',enabled:false,consent:false,support:'',joined:Date.parse(m.created_at),name};await savePerson(id,p);}
   const m=incoming[0] as Message|undefined;
-  if(m){const command=m.content.trim().toUpperCase();if(/^(PAIR |STOP$|DELETE MY DATA$|DEMO$|CHECKIN$|START$|I AGREE|REMIND )/.test(command)){p.cursor=m.id;await savePerson(id,p);if(session){session.cursor=m.id;await persist(session);}}
+  if(m){const command=messageText(m.content).toUpperCase();if(/^(PAIR |STOP$|DELETE MY DATA$|DEMO$|CHECKIN$|START$|I AGREE|REMIND )/.test(command)){p.cursor=m.id;await savePerson(id,p);if(session){session.cursor=m.id;await persist(session);}}
    if(command.startsWith('PAIR ')){const ok=await completePairing(command.slice(5),id);p.cursor=m.id;await savePerson(id,p);await send(configFor(p,c),ok?'Your Ambiguous account is paired with your Primtal panel. Start a demo from the panel or reply DEMO. Your answers stay in this DM.':'That pairing code is invalid, expired or already used. Create a new code in your Primtal panel.');return;}
    if(command==='STOP'){p.enabled=false;p.cursor=m.id;await savePerson(id,p);if(session){await accept(configFor(p,c),session,'STOP');await flush(configFor(p,c),session);}else await send(configFor(p,c),'Check-ins are paused. Reply DEMO or CHECKIN when you want to begin.');return;}
    if(command==='DELETE MY DATA'){p.enabled=false;await savePerson(id,p);await db().batch([db().prepare('DELETE FROM sessions WHERE owner=?').bind(id),db().prepare('DELETE FROM checkins WHERE owner=?').bind(id),db().prepare('DELETE FROM bindings WHERE participant_id=?').bind(id),db().prepare('DELETE FROM participants WHERE id=?').bind(id)]);await send(configFor(p,c),'Your saved Primtal answers, settings and pairing have been deleted. Messages already in Ambiguous and calendar events remain under your control.');return;}
@@ -28,7 +29,7 @@ async function processDM(channelId:string,userId:string,name:string,c:Awaited<Re
     if(!p.consent&&!command.startsWith('I AGREE')){p.cursor=m.id;await savePerson(id,p);await send(configFor(p,c),`Primtal stores your answers privately and sends optional notes to OpenRouter for support routing. Only calendars you share with Primtal are read. Events require your approval. This is a wellbeing demo, not medical care. Reply **I AGREE${demo?' DEMO':''}** to start, or STOP. Use fictional answers in demo mode.`);return;}
     if(!p.calendarId){const calendars=await amb(c.botKey,'/api/calendars');const own=(calendars.data||[]).filter((v:{owner_id:string;workspace_id:string})=>v.owner_id===p.userId&&v.workspace_id===p.workspaceId);if(own.length===1)p.calendarId=own[0].id;}p.consent=true;p.cursor=m.id;await savePerson(id,p);await start(id,configFor(p,c),demo);return;
    }
-   if(/^REMIND (\d\d:\d\d) ([A-Z_/]+)$/i.test(m.content.trim())){const [,hour,tz]=m.content.trim().match(/^REMIND (\d\d:\d\d) ([A-Z_/]+)$/i)!;if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(hour))throw new Error('Invalid time');new Intl.DateTimeFormat('en',{timeZone:tz});p.hour=hour;p.timezone=tz;p.enabled=true;p.cursor=m.id;await savePerson(id,p);await send(configFor(p,c),`Daily check-in enabled at ${hour} (${tz}). Reply STOP to pause.`);return;}
+   if(/^REMIND (\d\d:\d\d) ([A-Z_/]+)$/i.test(messageText(m.content))){const [,hour,tz]=messageText(m.content).match(/^REMIND (\d\d:\d\d) ([A-Z_/]+)$/i)!;if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(hour))throw new Error('Invalid time');new Intl.DateTimeFormat('en',{timeZone:tz});p.hour=hour;p.timezone=tz;p.enabled=true;p.cursor=m.id;await savePerson(id,p);await send(configFor(p,c),`Daily check-in enabled at ${hour} (${tz}). Reply STOP to pause.`);return;}
   }
   if(p.consent)await tick(id,configFor(p,c));
  });

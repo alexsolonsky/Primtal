@@ -31,7 +31,8 @@ async function load(file){if(cache.has(file))return cache.get(file);let mod;
  cache.set(file,mod);await mod.link((spec,ref)=>resolve(spec,ref.identifier));return mod;
 }
 function resolve(spec,parent){return load(spec.startsWith('.')?path.resolve(path.dirname(parent),spec+'.ts'):spec);}
-const modules={};for(const name of ['questions','screeners','store','workflow','ambiguous','participants']){const mod=await load(path.resolve('lib/primtal/'+name+'.ts'));if(mod.status==='linked')await mod.evaluate();modules[name]=mod.namespace;}
+const modules={};for(const name of ['questions','screeners','store','workflow','ambiguous','participants','message-text']){const mod=await load(path.resolve('lib/primtal/'+name+'.ts'));if(mod.status==='linked')await mod.evaluate();modules[name]=mod.namespace;}
+assert.equal(modules['message-text'].messageText('```\nPAIR 0123456789ABCDEF\n```'),'PAIR 0123456789ABCDEF');assert.equal(modules['message-text'].messageText('`2`'),'2');assert.equal(modules['message-text'].messageText('**APPROVE**'),'APPROVE');assert.equal(modules['message-text'].messageText('APPROVE\nSKIP'),'APPROVE\nSKIP');
 const {normalize}=modules.questions;assert.equal(normalize('mood',1),'concern');assert.equal(normalize('depression',5),'good');assert.equal(normalize('anxiety',5),'concern');assert.throws(()=>normalize('burnout',6));
 assert.match(modules.screeners.screenResult('depression',[2,2,2,2,2,2,2,1,0]),/15\/27, moderately severe/);assert.match(modules.screeners.screenResult('anxiety',[3,3,3,3,3,3,3]),/21\/21, severe/);assert.throws(()=>modules.screeners.screenResult('anxiety',[1]));
 const c={botKey:'test',openrouterKey:'test',model:'test',botId:'bot',workspaceId:'ws',userId:'u1',channelId:'ch',calendarId:'cal',timezone:'Europe/Madrid',hour:'16:00',enabled:false,consent:true,support:''};
