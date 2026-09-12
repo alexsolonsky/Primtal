@@ -1,9 +1,27 @@
 # Primtal cloud application
 
-Ambiguous DMs + personal calendars, OpenRouter, a companion web assistant and encrypted D1 storage.
+React/TypeScript web panel and hosted Worker for private Ambiguous check-ins, OpenRouter text processing and encrypted D1 payload storage.
 
-Read [Demo guide](docs/DEMO-GUIDE.md) for setup, per-person consent, pairing, remote launch, background activation and event approval/undo. [Screeners](docs/SCREENERS.md) records verified sources and remaining questionnaire limitations.
+Start with the [project documentation](../../docs/README.md).
 
-Development: `pnpm install`, `pnpm exec tsc --noEmit`, `node --experimental-vm-modules scripts/check-workflow.mjs`, `pnpm build`.
+- [Panel controls](../../docs/implementation/PANEL-GUIDE.md)
+- [Team onboarding](../../docs/implementation/TEAM-SETUP.md)
+- [Architecture](../../docs/implementation/ARCHITECTURE.md)
+- [Daily workflow](../../docs/implementation/daily-checkin-workflow.md)
+- [Operations and development](../../docs/implementation/OPERATIONS.md)
+- [Questionnaire sources](docs/SCREENERS.md)
 
-The existing setup application is published privately. This copy deliberately omits its private hosting project identity and every provider secret. Configure your intended hosting project and runtime values before deploying a separate copy.
+## Contributor checks
+
+From this directory:
+
+```sh
+pnpm install
+pnpm exec tsc --noEmit
+node --experimental-vm-modules scripts/check-workflow.mjs
+pnpm build
+```
+
+Use the Node.js and package-manager versions declared in `package.json`. These commands do not publish the hosted application. A separate deployment needs its own hosting identity, authentication, D1 migrations and runtime secrets. The checked-in hosting manifest omits the existing private project's identity.
+
+The hosted panel contains newer team-specific controls and shared setup-assistant access than this application snapshot. Read [release provenance](../../docs/implementation/OPERATIONS.md#hosted-release-and-repository) before assuming an independently deployed copy matches the current site.

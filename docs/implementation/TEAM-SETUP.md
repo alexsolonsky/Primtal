@@ -1,76 +1,69 @@
-# Connect your own Primtal bot conversation
+# Connect your own Primtal account
 
-Primtal runs online in Ambiguous. Each team member uses their own account, private conversation, answers and calendar. You can close your browser or turn off your computer; the hosted service continues processing check-ins and reminders.
+[Documentation home](../README.md) · [Panel guide](PANEL-GUIDE.md)
 
-## 1. Join the workspace
+Every participant uses their own Ambiguous account, direct conversation, answers and personal calendar. The shared bot runs online. You do not need to clone GitHub, copy the owner's API keys or leave a laptop running.
 
-Open [Ambiguous](https://app.ambiguous.ai/chat) and select the **Primtal** workspace. Ask your workspace owner for an invitation if it is missing. A GitHub collaborator invitation is separate from Ambiguous workspace membership.
+## 1. Join the Ambiguous workspace
 
-Find **Primtal**, `primtal@primtal.ambi.cc`, and open a direct conversation. It must contain exactly two members: you and Primtal. Use your own conversation, rather than another team member's chat or a group channel.
+Open [Ambiguous](https://app.ambiguous.ai/chat), select the **Primtal** workspace and find the Primtal agent, `primtal@primtal.ambi.cc`. Ask the workspace owner for an invitation if the workspace is missing.
 
-## 2. Connect your calendar
+Open a direct conversation containing exactly you and Primtal. Group channels and another person's conversation are not supported for check-ins.
 
-Open [Calendar](https://app.ambiguous.ai/calendar). Open the sharing settings for your personal calendar, such as **My Calendar**, and share it with **Primtal** as **Editor**.
+## 2. Start with Hello
 
-Share the one personal calendar you want Primtal to use. The bot selects it automatically when it is the only shared calendar you own. Calendars owned by other people are excluded. If you have already shared several owned calendars, leave just the intended calendar shared with Primtal or select one in your paired setup panel if you have panel access.
-
-Editor permission lets the bot carry out a calendar change after your confirmation. It does not allow the bot to read another participant's answers.
-
-## 3. Start your first check-in
-
-Send this in your private Primtal conversation:
+Send:
 
 ```text
 Hello
 ```
 
-Primtal replies **Hello, [your name]** and explains how your answers, optional note and shared calendar are used. Select **AGREE** to start question 1. Select **Maybe later** to leave onboarding without enabling check-ins.
+Primtal greets you by name and explains answer storage, optional-note processing and calendar access. Select **AGREE** to start, or **Maybe later** to stop onboarding.
 
-Choose a button for each of the six questions. Primtal uses your display name. You can add a short note or select **Continue to my calendar**. The six choices run without model calls; optional text goes through OpenRouter for support routing.
+Answer six questions using the labelled choices. You can add a short note or choose **Continue to my calendar**. Low daily answers are not diagnoses, and answering the questions does not itself authorise a calendar change.
 
-The bot then shows your answers and the current calendar. With enough history, it compares days with late calendar activity against other days. An association in these answers is not a medical diagnosis or proof of cause.
+The owner must have connected the providers and enabled background processing. If the bot stays silent, contact the owner rather than obtaining a separate model key.
 
-- **Protect this hour** creates the proposed private focus event.
-- **Move to working hours** moves the specific meeting shown in the proposal.
-- **Keep this meeting** leaves it at the original time.
-- **Restore original time** reverses the confirmed move, if that time is still available.
-- **Undo this focus block** removes the focus event created by this check-in.
+## 3. Share your calendar
 
-Purple marks events created or changed through Primtal. Meeting moves currently cover private, non-recurring events you control, without other attendees or resource bookings. Shared, recurring and externally synced meetings stay under their organiser's control.
+In [Ambiguous Calendar](https://app.ambiguous.ai/calendar), share the personal calendar you own with **Primtal** as **Editor**.
 
-## 4. Set your daily reminder
+If exactly one owned calendar is shared, the bot can select it automatically. If several are shared, choose the intended one in your paired panel or leave only the intended calendar shared. A colleague's calendar is not eligible, even when you can see it in Ambiguous.
 
-For a reminder at 16:00 in Spain, send:
+After the questions, Primtal can show a focus proposal or an eligible meeting move. Confirm the exact action and time before it is written. Shared meetings, recurring events and external calendar events are excluded from automatic movement.
+
+## 4. Set a daily reminder
+
+For a 16:00 check-in in Spain, send:
 
 ```text
 REMIND 16:00 Europe/Madrid
 ```
 
-Use an IANA time zone such as `Europe/London` for another location. The bot confirms your schedule. To pause reminders and stop the current check-in, send `STOP`. To restart later, send `Hello`; set `REMIND` again if you want reminders.
+Choose the appropriate IANA time zone for yourself. The current reminder schedule runs every day, including weekends. A reminder is eligible at or after the selected local time; network or provider delays may affect delivery. An active check-in is not replaced by a new daily reminder.
 
-To review the calendar after completing all six answers, send `CALENDAR`. To delete your stored Primtal answers, settings and web pairing, send `DELETE MY DATA`. Messages already in Ambiguous and calendar events remain under your control.
-
-## Optional: use the setup panel
-
-The [hosted Primtal panel](https://primtal-agent.aicreatormax.chatgpt.site) currently has separate owner-only access. Team members can use the Ambiguous bot without opening this panel. No teammate needs to copy the project owner's API keys, run a server, clone GitHub or keep a laptop online.
-
-If the site owner grants you panel access, sign in with your own account, select **Create pairing command**, and send that one-time command in your own Primtal DM. Then you can select your calendar and send a check-in from the panel. A pairing code expires in 10 minutes and works once.
-
-**Presentation setup** prepares synthetic answers and matching private calendar events for the previous 10 workdays. It applies only to the account paired with that panel. The comparison identifies synthetic history; real answers are preserved. **Remove synthetic answers** removes those prepared answer records while keeping calendar events.
-
-## If something is missing
-
-| Problem | Action |
+| Command | Purpose |
 | --- | --- |
-| Primtal workspace or bot is missing | Ask the workspace owner to add you to the Ambiguous workspace. |
-| No calendar proposal | Share your own calendar as Editor, finish the six questions and optional-note step, then send `CALENDAR`. |
-| No historical pattern | Collect repeated check-ins, or use the panel's clearly marked presentation history. At least three days per comparison group are required. |
-| A meeting is left in place | It may have other attendees, recur, come from an external calendar, or have no free alternative. Open the event to coordinate with its organiser. |
-| Bot stays silent | Ask the project owner to check background processing and provider status in the hosted panel. Closing the owner's computer has no effect on the hosted bot. |
-| A note pauses calendar actions | Follow the support message. Ambiguous or failed safety checks pause changes. |
+| `Hello` | Begin onboarding or start/resume a check-in. |
+| `REMIND 16:00 Europe/Madrid` | Save and enable a personal daily reminder. |
+| `CALENDAR` | Review the calendar after six completed answers, when safety routing permits it. |
+| `STOP` | Stop the current flow and disable daily reminders. |
+| `DELETE MY DATA` | Remove stored answers, the current session, participant preferences and web pairing. Existing Ambiguous messages and calendar events remain. |
 
-## Project owner: one-time online setup
+After `STOP`, send `Hello` to start again. Set `REMIND` again when you want scheduled check-ins to resume.
 
-The shared deployment needs saved Ambiguous and OpenRouter credentials and **Enable background bot** activated in the panel. Credentials are encrypted on the server and stay out of GitHub. Ambiguous message automations and a minute schedule call the hosted Worker. Active choice cards use bounded background polling; no local tunnel or computer process is involved. API quotas and provider availability can still affect response times.
+## Optional: connect the web panel
 
-**Primtal assistant** provides setup help in the web panel. Ambiguous provides the direct-message interface; the Primtal backend handles check-ins, storage and calendar actions.
+The [hosted panel](https://primtal-agent.aicreatormax.chatgpt.site) has a separate site access policy and currently admits only the owner. To present through the panel, ask the site owner to invite the email you use for ChatGPT. A GitHub invitation or Ambiguous workspace invitation does not grant this access.
+
+Once admitted:
+
+1. Sign in with your own invited account and check the displayed identity.
+2. Select **Create pairing command**.
+3. Send the generated `PAIR …` command in your own private Primtal conversation within 10 minutes.
+4. Wait for the pairing confirmation, then choose your calendar and **Save preferences**.
+5. Use **Send check-in to my DM** for an immediate launch.
+
+The hosted release provides the shared setup assistant to paired teammates and reserves provider controls for the connection owner. Presentation preparation applies to the panel's paired participant. There is no “send to any user” selector.
+
+If you cannot open the panel, you can still use the bot and calendar workflow in your own Ambiguous DM. See [access and troubleshooting](OPERATIONS.md#troubleshooting).

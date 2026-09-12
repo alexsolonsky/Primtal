@@ -1,42 +1,57 @@
 # Primtal
 
-Personal wellbeing check-ins in Ambiguous, with OpenRouter for model access and a companion web interface. Built for the Valencia AI Tinkerers hackathon.
+Primtal helps people check in with themselves and make one practical change to their working day. It combines a private conversation in Ambiguous, six quick wellbeing questions, a personal calendar review, and calendar actions that require confirmation.
 
-## Use Primtal online
+Built for the Valencia AI Tinkerers hackathon. The application runs online; users do not need to install software or keep a computer running.
 
-**[Connect your own account — team instructions](docs/implementation/TEAM-SETUP.md)**
+**[Open the hosted panel](https://primtal-agent.aicreatormax.chatgpt.site)** · **[Documentation](docs/README.md)** · **[Connect your account](docs/implementation/TEAM-SETUP.md)**
 
-Open your own private conversation with Primtal in Ambiguous, share your calendar as Editor, send `Hello`, and select **AGREE**. The service runs on the hosted backend. No local server, tunnel, API key copy or running owner computer is required.
+The panel currently has owner-only access. Joining the Ambiguous workspace or this GitHub repository does not grant access to the panel. Team members can use their own Primtal DM without opening it.
 
-## Current status
+## What the product does
 
-[Private setup page](https://primtal-agent.aicreatormax.chatgpt.site) — published for the owner. It validates and encrypts provider keys and includes a setup chat backed by OpenRouter once credentials are saved.
+1. A participant sends `Hello` to Primtal and selects **AGREE**.
+2. Primtal asks six questions using selectable answers and the participant's first name.
+3. The participant can add a note or continue directly to the calendar review.
+4. Primtal shows today's busy events, occupied minutes, and any supported comparison with previous check-ins.
+5. It offers a free focus hour or, when the conditions are met, a working-hours alternative for a specific personal meeting.
+6. The participant confirms the action, opens the real calendar event, and can undo the change when the required conditions still hold.
 
-The cloud application includes per-person check-ins with native choice buttons, encrypted storage, one-time web pairing, daily reminders, optional PHQ-9/GAD-7 follow-ups, calendar approval and undo, and the team logo. Six daily answers run without model calls. The setup panel also offers clearly marked synthetic history for presentations and calendar pattern comparisons. Calendar changes require each participant's Editor grant and confirmation. BAT-12, ASRS and the full technostress instrument are currently unavailable.
+The six answer selections and calendar comparisons run in application code without model calls. OpenRouter processes optional free text and powers the panel's setup assistant. The setup assistant answers questions about using Primtal; calendar changes are performed through the workflow controls.
 
-## Code and docs
+## What the panel adds
 
-- [Application source](apps/agent)
-- [Implementation status and stack](docs/implementation/STACK-AND-STATUS.md)
-- [Team setup instructions](docs/implementation/TEAM-SETUP.md)
-- [Presentation runbook](docs/implementation/DEMO-GUIDE.md)
-- [Daily question workflow](docs/implementation/daily-checkin-workflow.md)
+The panel connects the providers, pairs a web account with its own Ambiguous conversation, configures reminders, starts a check-in remotely, displays the current question and calendar proposal, and prepares synthetic presentation history. See the [button-by-button panel guide](docs/implementation/PANEL-GUIDE.md).
 
-The six daily questions cover mood, enjoyment, anxiety, exhaustion, focus and technostress. Mood and enjoyment have reversed scale direction. Domains remain separate; results are not diagnoses.
+Presentation preparation writes **real events into the selected calendar** alongside synthetic answer records. Removing synthetic answers does not delete those events.
 
-Provider keys, personal answers and private calendar data are excluded from this repository.
+## Read the documentation
 
-## Development
+| Goal | Guide |
+| --- | --- |
+| Understand each panel control | [Panel guide](docs/implementation/PANEL-GUIDE.md) |
+| Connect a teammate's own account | [Team setup](docs/implementation/TEAM-SETUP.md) |
+| Understand the questions and decision rules | [Daily workflow](docs/implementation/daily-checkin-workflow.md) |
+| Understand the system and data flow | [Architecture](docs/implementation/ARCHITECTURE.md) |
+| Review access, consent and deletion | [Privacy and data](docs/implementation/PRIVACY-AND-DATA.md) |
+| Maintain or deploy the application | [Operations and development](docs/implementation/OPERATIONS.md) |
+| Prepare a presentation | [Presentation runbook](docs/implementation/DEMO-GUIDE.md) |
+| Separate current capabilities from future work | [Implementation status](docs/implementation/STACK-AND-STATUS.md) |
 
-```sh
-cd apps/agent
-pnpm install
-pnpm exec tsc --noEmit
-pnpm build
-```
+## Scope
 
-Cloud runtime: Cloudflare Workers + D1. The hosting manifest deliberately excludes the existing private project identity; configure the intended hosting project and its runtime secrets before deploying a separate copy.
+Daily answers are wellbeing signals, not diagnoses. PHQ-9 and GAD-7 are available as optional follow-ups; other full questionnaires are unavailable. A concerning or unassessable free-text safety signal pauses schedule suggestions. Primtal does not provide continuous crisis monitoring or automatically contact a clinician.
+
+Meeting moves cover a narrow class of personal events. They do not renegotiate group meetings, move recurring series, book PTO, or reorganise an entire calendar. Historical associations do not establish that meetings cause a health condition.
+
+## Code and deployment
+
+The application is in [apps/agent](apps/agent). The stack uses React, TypeScript, a hosted Cloudflare Worker, D1 storage, Ambiguous APIs and OpenRouter.
+
+The panel guide describes the hosted release reviewed on **12 September 2026**. Its latest team-specific panel controls and shared setup-assistant access are ahead of the application snapshot in this repository. See [release provenance](docs/implementation/OPERATIONS.md#hosted-release-and-repository) before deploying a separate copy.
+
+Provider credentials, personal answers and private calendar exports must stay out of GitHub. The repository's hosting manifest deliberately omits the identity of the existing private deployment.
 
 ## Origin
 
-Based on [DMercedesGarcia/Primtal](https://github.com/DMercedesGarcia/Primtal). The original MIT license is retained. The implementation agreement records the newer Ambiguous direction.
+Based on [DMercedesGarcia/Primtal](https://github.com/DMercedesGarcia/Primtal). The original MIT license is retained.

@@ -1,17 +1,29 @@
-# Primtal stack and status
+# Implementation status
 
-- Ambiguous provides one-to-one conversations, native choice cards, personal calendars and online automations.
-- The hosted Cloudflare Worker and D1 handle deterministic check-ins, encrypted records, participant isolation, single-use web pairing and calendar confirmation/undo.
-- OpenRouter processes optional notes and the setup assistant using the free endpoint `nex-agi/nex-n2.5-mini:free`. Paid fallback is disabled.
-- The web panel includes a setup chat. It has no calendar action tools; the backend handles bot and panel actions.
-- Six daily choices and history comparisons run without model calls. PHQ-9/GAD-7 remain optional, separately scored follow-ups; other full screening instruments are unavailable.
-- Purple (`#8B5CF6`) marks events created or changed with Primtal. Native poll messages retain their question and buttons without a repeated numbered answer list.
-- Presentation setup prepares up to 10 prior workdays with separate synthetic records and matching private calendar events. It preserves recorded answers, skips calendar conflicts and resumes without duplicate writes. Synthetic records are identified in comparisons and excluded from clinical follow-up decisions.
-- History comparisons use up to 28 prior complete days and require at least three days in each group. They compare mood, enjoyment and fatigue averages; they do not establish depression or causation.
-- A matching late event can produce a proposal to move that existing meeting into a free weekday slot between 09:00 and 17:00. The duration is preserved. The bot requires confirmation, rechecks the event and target slot, and offers restoration of the original time. Shared, recurring, resource-booked and externally synced events are excluded from automatic movement.
+[Documentation home](../README.md)
 
-The owner-private panel and Ambiguous bot have separate access. Any member of the Primtal Ambiguous workspace can opt in through their own DM. No team dashboard exposes another participant's answers. The service continues online when the panel and local computers are closed; external API availability and quotas still matter.
+Reviewed against the hosted panel and application source on **12 September 2026**. See [release provenance](OPERATIONS.md#hosted-release-and-repository) for the hosted/repository difference.
 
-TypeScript, build and in-memory SQLite workflow checks cover native cards, isolated votes/history, zero model calls for six choices, synthetic history idempotency, sample thresholds, duplicate/stale approvals, meeting movement/restoration, focus events and failed-model routing. Live calendar checks are performed separately from simulated tests.
+| Capability | Current behaviour |
+| --- | --- |
+| Online service | Hosted Worker and D1; Ambiguous schedule/events and active-card polling. No participant laptop process required. |
+| Daily check-in | Six named choice questions with first-name greeting and progress; no model call for a daily choice. |
+| Team participation | Own two-member DM, explicit opt-in, personal schedule and owned shared calendar. |
+| Web access | Site access is separate and currently owner-only; an admitted teammate still pairs their own account. |
+| Provider setup | Owner validation and encrypted credential storage. |
+| Setup assistant | OpenRouter help replies; no calendar action tools. Hosted release supports the shared connection for paired teammates. |
+| Calendar evidence | Busy-event count, occupied minutes with overlaps counted once, and a 28-day late-event comparison with minimum sample sizes. |
+| Calendar actions | Confirmed one-hour focus event or an eligible personal meeting move, with validation and conditional undo. |
+| Presentation preparation | Up to 10 synthetic historical workdays and eight current-day work blocks; calendar events are real. |
+| Optional questionnaires | PHQ-9 and GAD-7 implemented; other full questionnaires unavailable. |
+| Safety routing | Non-clear or failed free-text assessment pauses suggestions; fixed support response; no clinician contacted. |
 
-Start with [Team setup](TEAM-SETUP.md) and [Presentation runbook](DEMO-GUIDE.md). The application and this document describe the implemented Ambiguous flow.
+## Not implemented
+
+Group meeting negotiation, recurring-series changes, meeting shortening, PTO booking, external resource booking, a manager wellbeing dashboard, real therapist dispatch and a comprehensive retention/deletion policy are not implemented. The configured free model's availability is not guaranteed.
+
+## Current limitations that affect a presentation
+
+The late-event comparison is a rule-based association, not a causal or clinical conclusion. Fewer than three usable days in either group produces no match. A matching pattern does not ensure a movable event: future timing, attendee restrictions and a free destination still matter. In particular, an event listing the bot as an attendee is excluded by the current filter.
+
+The [workflow script](../../apps/agent/scripts/check-workflow.mjs) covers core behaviour with simulated providers. Live credentials, sharing, automation delivery and event changes require their own observed acceptance check. This documentation update does not claim new live tests.
