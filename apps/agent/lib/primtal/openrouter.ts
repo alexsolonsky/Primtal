@@ -1,6 +1,6 @@
 import {z} from 'zod';
 import type {Config} from './store';
-export const FREE_MODELS=['nex-agi/nex-n2.5-mini:free','google/gemma-4-26b-a4b-it:free'] as const;
+export const FREE_MODELS=['dots-studio/dots-3-note-preview:free','nex-agi/nex-n2.5-mini:free','google/gemma-4-26b-a4b-it:free'] as const;
 export const DEFAULT_MODEL=FREE_MODELS[0];
 const safety=z.object({status:z.enum(['clear','flagged','uncertain'])}).strict();
 export async function completion(c:Pick<Config,'openrouterKey'|'model'>,system:string,content:string,maxTokens=180){const r=await fetch('https://openrouter.ai/api/v1/chat/completions',{method:'POST',headers:{Authorization:`Bearer ${c.openrouterKey}`,'Content-Type':'application/json','X-Title':'Primtal'},body:JSON.stringify({model:c.model,temperature:0,max_tokens:maxTokens,reasoning:{enabled:false},provider:{data_collection:'deny',sort:'latency',max_price:{prompt:0,completion:0}},messages:[{role:'system',content:system},{role:'user',content}],response_format:{type:'json_object'}}),signal:AbortSignal.timeout(12000)});if(!r.ok)throw new Error(`OpenRouter returned ${r.status}. Check your key, credit and model access.`);const d=z.object({choices:z.array(z.object({message:z.object({content:z.string()})}))}).parse(await r.json());if(typeof d.choices?.[0]?.message?.content!=='string')throw new Error('OpenRouter response was empty');return JSON.parse(d.choices[0].message.content.trim().replace(/^```(?:json)?\s*([\s\S]*?)\s*```$/,'$1'));}

@@ -6,9 +6,7 @@
 
 The panel at [primtal-agent.aicreatormax.chatgpt.site](https://primtal-agent.aicreatormax.chatgpt.site) runs online. Participants do not need a local server or tunnel.
 
-Documentation was reviewed against hosted source `975fab63e5166004c4b4dc80550c3b68555a3062` on **12 September 2026**. The application snapshot inspected in this GitHub repository was [d692e4f](https://github.com/alexsolonsky/Primtal/commit/d692e4faa45670e92d72b3ca8d53b12a9ec99d68).
-
-The hosted release is ahead around role-aware panel controls and shared setup-assistant access for paired teammates. Those changes are not included in this documentation-only update to application source. Do not assume a fresh deployment of the repository will exactly reproduce that portion of the hosted panel. The core question, pairing, calendar and history rules described here were checked against the application code.
+Documentation and application source were reviewed against hosted source `0c78b9420810c8dbaa4d9fc2bcbfcaffb17f4bec` on **12 September 2026**. The repository includes the hosted team controls and shared setup-assistant access as well as the delivery-contention fix and visible model status. Provider credentials, participant data and live sharing permissions remain separate runtime configuration.
 
 The live site currently has owner-only access. Hosting access must be granted separately from Ambiguous workspace membership and GitHub access. Publishing a GitHub change is not, by itself, proof that the hosted application has changed.
 
@@ -35,7 +33,7 @@ The bot remains online when the owner's computer is off. Minute scheduling, mess
 
 OpenRouter credentials are entered through the owner form; the application reads the encrypted stored connection. There is no participant requirement to supply a separate key.
 
-The configured default model is `nex-agi/nex-n2.5-mini:free`; the source also defines `google/gemma-4-26b-a4b-it:free` as a candidate for the owner's model-selection routine. This is a source configuration, not a claim that either endpoint is currently available. The saved model may differ from the default. Calls enforce zero-price provider limits, disable reasoning and have a 12-second request timeout; there is no paid fallback. The panel currently has no end-user model picker.
+The configured default model is `dots-studio/dots-3-note-preview:free`; the source also defines `nex-agi/nex-n2.5-mini:free` and `google/gemma-4-26b-a4b-it:free` as candidates for the owner's model-selection routine. This is a source configuration, not a claim that either endpoint is currently available. The saved model may differ from the default. Calls enforce zero-price provider limits, disable reasoning and have a 12-second request timeout; there is no paid fallback. The panel shows the saved model identifier and has no end-user model picker. The protected owner model-selection operation validates connectivity and three routing samples before saving the requested free model; this is a smoke check, not clinical validation. The [OpenRouter model page](https://openrouter.ai/dots-studio/dots-3-note-preview:free) currently lists 30 September 2026 as the retirement date for the Dots free preview.
 
 ## Contributor commands
 
@@ -68,6 +66,7 @@ Changing the runner credential requires updating the corresponding private Ambig
 | Panel access denied | Request a site invitation for the ChatGPT identity you actually use. GitHub and Ambiguous invitations are separate. |
 | Pairing code rejected | Create a new command and send it within 10 minutes in your own two-member Primtal DM. A code is single-use. |
 | Bot is silent | Check owner provider status, **Enable background bot**, runner heartbeat and the private automation status in Ambiguous. |
+| Another request is finishing | Interactive actions wait up to 10 seconds for the participant lock. If still busy, wait briefly and retry; do not repeat an uncertain calendar write. |
 | Questions advance slowly | Check Ambiguous requests and active-card/background processing. Daily choice selection does not call the model. Free text and setup chat do. |
 | Calendar missing | Share a calendar you own in the same workspace with Primtal as Editor, then refresh/select it. |
 | No historical comparison | At least three usable late days and three other days are required within the prior 28 days. Prepared days may be skipped for existing answers or calendar conflicts. |

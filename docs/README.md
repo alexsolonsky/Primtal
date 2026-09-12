@@ -1,6 +1,6 @@
 # Primtal documentation
 
-These guides describe the implemented Primtal workflow and the hosted panel reviewed on **12 September 2026**. The [release note](implementation/OPERATIONS.md#hosted-release-and-repository) identifies the remaining difference between hosted panel code and the repository snapshot.
+These guides describe the implemented Primtal workflow and the hosted panel reviewed on **12 September 2026**. The [release note](implementation/OPERATIONS.md#hosted-release-and-repository) identifies the reviewed hosted source and explains the separate runtime configuration.
 
 ## Start here
 

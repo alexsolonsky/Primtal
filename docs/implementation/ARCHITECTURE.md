@@ -32,7 +32,7 @@ The hosting platform supplies the signed-in web identity. Ambiguous supplies wor
 
 Participant records are scoped by workspace and Ambiguous user. A web binding resolves to that participant; ordinary action endpoints do not accept an arbitrary participant ID. The backend verifies the exact two-person DM and the selected calendar's ownership.
 
-Site access, Ambiguous workspace membership and GitHub collaboration are independent. Provider ownership is also separate from participant ownership. The hosted release hides provider administration from teammates and permits a paired teammate to use the shared setup assistant. See the [release note](OPERATIONS.md#hosted-release-and-repository) for the repository snapshot difference.
+Site access, Ambiguous workspace membership and GitHub collaboration are independent. Provider ownership is also separate from participant ownership. The hosted release hides provider administration from teammates and permits a paired teammate to use the shared setup assistant. These team controls and the shared assistant access check are included in the repository. See the [release note](OPERATIONS.md#hosted-release-and-repository).
 
 ## Entry points
 
@@ -51,7 +51,7 @@ The assistant has its own authenticated streaming transport. User-facing mutatio
 
 The current session carries the question index, domain answers, optional note, safety state, follow-up queue, current outgoing card and calendar proposal. Each outgoing card has a reference and delivery state. Stale votes and stale web requests cannot silently apply to the next question.
 
-Participant locks serialize overlapping work. Calendar writes record pending/in-progress/confirmed or uncertain states. External effects cannot be made transactional with D1, so uncertain writes require calendar inspection before another attempt.
+Participant locks serialize overlapping work. Interactive check-in actions wait up to 10 seconds for background work; only acquiring the lock is retried, never the message or calendar action itself. A request that remains busy receives a retryable response. Background lock contention is skipped rather than reported as a failed DM. Calendar writes record pending/in-progress/confirmed or uncertain states. External effects cannot be made transactional with D1, so uncertain writes require calendar inspection before another attempt.
 
 An Ambiguous minute schedule calls the hosted runner. Supported message events can wake it earlier. While choice cards are active, bounded Worker continuations check votes; the minute schedule also provides recovery. The visible panel performs an additional refresh/poll approximately every five seconds. None of these requires the owner's computer to remain online.
 

@@ -2,7 +2,7 @@
 
 [Documentation home](../README.md)
 
-Reviewed against the hosted panel and application source on **12 September 2026**. See [release provenance](OPERATIONS.md#hosted-release-and-repository) for the hosted/repository difference.
+Reviewed against the hosted panel and application source on **12 September 2026**. See [release provenance](OPERATIONS.md#hosted-release-and-repository) for the reviewed source and runtime requirements.
 
 | Capability | Current behaviour |
 | --- | --- |
@@ -11,7 +11,7 @@ Reviewed against the hosted panel and application source on **12 September 2026*
 | Team participation | Own two-member DM, explicit opt-in, personal schedule and owned shared calendar. |
 | Web access | Site access is separate and currently owner-only; an admitted teammate still pairs their own account. |
 | Provider setup | Owner validation and encrypted credential storage. |
-| Setup assistant | OpenRouter help replies; no calendar action tools. Hosted release supports the shared connection for paired teammates. |
+| Setup assistant | OpenRouter help replies; no calendar action tools. Shared connection for paired teammates. The panel displays the configured model without an inference request. |
 | Calendar evidence | Busy-event count, occupied minutes with overlaps counted once, and a 28-day late-event comparison with minimum sample sizes. |
 | Calendar actions | Confirmed one-hour focus event or an eligible personal meeting move, with validation and conditional undo. |
 | Presentation preparation | Up to 10 synthetic historical workdays and eight current-day work blocks; calendar events are real. |

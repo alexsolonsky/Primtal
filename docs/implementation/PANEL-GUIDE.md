@@ -18,6 +18,8 @@ The hosted page has three main areas:
 2. **Provider connections** for the connection owner, or a **Team connection** explanation for other admitted users.
 3. **Primtal assistant**: setup help through the shared model connection, available to the owner and appropriately paired teammates.
 
+The **AI model · OpenRouter** block shows the model identifier saved on the server. This is the configured model, not a live health guarantee; displaying it does not make an inference call. Daily answer choices work without model calls.
+
 ## Provider connections: owner setup
 
 | Control | What it does |

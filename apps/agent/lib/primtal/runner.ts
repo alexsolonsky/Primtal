@@ -1,7 +1,7 @@
 import {messageText} from './message-text';
 import {amb,assertDM,send} from './ambiguous';
 import {providers} from './connections';
-import {db,lock,type Config} from './store';
+import {db,lock,BusyError,type Config} from './store';
 import {person,savePerson,personId,personConfig,completePairing,type Person} from './participants';
 import {getSession,start,tick,accept,flush,persist,offerConsent} from './workflow';
 
@@ -42,7 +42,7 @@ export async function runOnce(){
   if(channel.type!=='dm'||channel.member_count!==2||!Array.isArray(channel.members))continue;
   const ids=channel.members.map((m:{id:string})=>m.id);if(ids.length!==2||!ids.includes(c.botId))continue;
   const peer=channel.members.find((m:{id:string})=>m.id!==c.botId);if(!peer)continue;
-  try{await processDM(channel.id,peer.id,peer.display_name||'Participant',c);processed++;}catch(e){failed++;console.error('Primtal DM processing failed',{kind:e instanceof Error?e.name:'Error'});}
+  try{await processDM(channel.id,peer.id,peer.display_name||'Participant',c);processed++;}catch(e){if(e instanceof BusyError)continue;failed++;console.error('Primtal DM processing failed',{kind:e instanceof Error?e.name:'Error'});}
  }
  await db().prepare('INSERT INTO settings(id,owner,value) VALUES(?,?,?) ON CONFLICT(id) DO UPDATE SET value=excluded.value').bind('runner-heartbeat','system',JSON.stringify({at:new Date().toISOString(),processed,failed})).run();
  return {processed,failed};

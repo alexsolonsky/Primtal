@@ -24,4 +24,4 @@ pnpm build
 
 Use the Node.js and package-manager versions declared in `package.json`. These commands do not publish the hosted application. A separate deployment needs its own hosting identity, authentication, D1 migrations and runtime secrets. The checked-in hosting manifest omits the existing private project's identity.
 
-The hosted panel contains newer team-specific controls and shared setup-assistant access than this application snapshot. Read [release provenance](../../docs/implementation/OPERATIONS.md#hosted-release-and-repository) before assuming an independently deployed copy matches the current site.
+The application includes the hosted team controls, shared setup-assistant access, delivery-contention fix and visible configured model. Read [release provenance](../../docs/implementation/OPERATIONS.md#hosted-release-and-repository) before deploying a separate copy; runtime credentials and participant data are not included.

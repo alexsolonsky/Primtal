@@ -37,6 +37,19 @@ async function load(file){if(cache.has(file))return cache.get(file);let mod;
 }
 function resolve(spec,parent){return load(spec.startsWith('.')?path.resolve(path.dirname(parent),spec+'.ts'):spec);}
 const modules={};for(const name of ['questions','screeners','store','ambiguous','calendar-actions','patterns','participants','message-text','message-cards','workflow','sample-history']){const mod=await load(path.resolve('lib/primtal/'+name+'.ts'));if(mod.status==='linked')await mod.evaluate();modules[name]=mod.namespace;}
+// A user's action waits for background work without replaying its side effects.
+let unlockFirst, enteredFirst;
+const acquired=new Promise(resolve=>{enteredFirst=resolve;});
+const release=new Promise(resolve=>{unlockFirst=resolve;});
+let executions=0;
+const holder=modules.store.lock('delivery-race',async()=>{enteredFirst();await release;});
+await acquired;
+await assert.rejects(()=>modules.store.lock('delivery-race',async()=>{executions++;}),e=>e.name==='BusyError');
+const waiter=modules.store.lock('delivery-race',async()=>{executions++;},1000);
+unlockFirst();await Promise.all([holder,waiter]);assert.equal(executions,1,'Waiting for background work must execute the action exactly once');
+await assert.rejects(()=>modules.store.lock('delivery-error',async()=>{executions++;throw new Error('Provider failure');},1000),/Provider failure/);
+assert.equal(executions,2,'A failed provider operation must not be retried');
+await modules.store.lock('delivery-error',async()=>{executions++;});assert.equal(executions,3,'Failed operations release their lock');
 assert.equal(modules['message-text'].messageText('```\nPAIR 0123456789ABCDEF\n```'),'PAIR 0123456789ABCDEF');assert.equal(modules['message-text'].messageText('`2`'),'2');assert.equal(modules['message-text'].messageText('**APPROVE**'),'APPROVE');assert.equal(modules['message-text'].messageText('APPROVE\nSKIP'),'APPROVE\nSKIP');
 const {normalize}=modules.questions;assert.equal(normalize('mood',1),'concern');assert.equal(normalize('depression',5),'good');assert.equal(normalize('anxiety',5),'concern');assert.throws(()=>normalize('burnout',6));
 assert.match(modules.screeners.screenResult('depression',[2,2,2,2,2,2,2,1,0]),/15\/27, moderately severe/);assert.match(modules.screeners.screenResult('anxiety',[3,3,3,3,3,3,3]),/21\/21, severe/);assert.throws(()=>modules.screeners.screenResult('anxiety',[1]));

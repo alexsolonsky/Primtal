@@ -8,6 +8,16 @@ export type Config={botKey:string;openrouterKey:string;model:string;botId:string
 export async function config(){const row=await db().prepare('SELECT owner,value FROM settings WHERE id=?').bind('primtal').first<{owner:string,value:string}>();return row?{owner:row.owner,data:await unseal<Config>(row.value)}:null;}
 export async function saveConfig(id:string,data:Config){const {savePerson,person}=await import('./participants');const existing=await person(id);if(!existing)throw new Error('Participant is not paired');const {botKey,openrouterKey,model,botId,...value}=data;await savePerson(id,{...existing,...value});}
 export async function owner(request?:Request){if(request&&request.method!=='GET'){const origin=request.headers.get('origin');if(origin&&origin!==new URL(request.url).origin)throw new Error('Cross-origin request denied');}const u=await getChatGPTUser();if(!u)throw new Error('Sign in required');const c=await config();if(c&&c.owner!==u.userId)throw new Error('This personal workspace belongs to another user');return u.userId;}
-export async function lock<T>(id:string,work:()=>Promise<T>):Promise<T>{const token=crypto.randomUUID();const now=Date.now();const r=await db().prepare('INSERT INTO locks (id,token,expires) VALUES (?,?,?) ON CONFLICT(id) DO UPDATE SET token=excluded.token, expires=excluded.expires WHERE locks.expires < ?').bind(id,token,now+180000,now).run();if(!r.meta.changes)throw new Error('A request is already running. Wait a moment.');try{return await work();}finally{await db().prepare('DELETE FROM locks WHERE id=? AND token=?').bind(id,token).run();}}
+export class BusyError extends Error {constructor(){super('Another request is finishing. Please try again in a moment.');this.name='BusyError';}}
+export async function lock<T>(id:string,work:()=>Promise<T>,waitMs=0):Promise<T>{
+ const token=crypto.randomUUID(),deadline=Date.now()+Math.min(10000,Math.max(0,waitMs));
+ for(;;){const now=Date.now();const r=await db().prepare('INSERT INTO locks (id,token,expires) VALUES (?,?,?) ON CONFLICT(id) DO UPDATE SET token=excluded.token, expires=excluded.expires WHERE locks.expires < ?').bind(id,token,now+180000,now).run();
+  if(r.meta.changes)break;
+  if(Date.now()>=deadline)throw new BusyError();
+  await new Promise(resolve=>setTimeout(resolve,Math.min(150,Math.max(1,deadline-Date.now()))));
+ }
+ // Only acquisition is retried. Calendar writes and message delivery run once.
+ try{return await work();}finally{await db().prepare('DELETE FROM locks WHERE id=? AND token=?').bind(id,token).run();}
+}
 export async function hash(s:string){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)))).map(v=>v.toString(16).padStart(2,'0')).join('');}
-export function errorResponse(e:unknown){return Response.json({error:e instanceof Error?e.message:'Request failed'}, {status:400,headers:{'Cache-Control':'no-store'}});}
+export function errorResponse(e:unknown){if(e instanceof BusyError)return Response.json({error:e.message,code:'busy'},{status:409,headers:{'Cache-Control':'no-store','Retry-After':'2'}});return Response.json({error:e instanceof Error?e.message:'Request failed'}, {status:400,headers:{'Cache-Control':'no-store'}});}

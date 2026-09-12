@@ -48,7 +48,7 @@ Meeting moves cover a narrow class of personal events. They do not renegotiate g
 
 The application is in [apps/agent](apps/agent). The stack uses React, TypeScript, a hosted Cloudflare Worker, D1 storage, Ambiguous APIs and OpenRouter.
 
-The panel guide describes the hosted release reviewed on **12 September 2026**. Its latest team-specific panel controls and shared setup-assistant access are ahead of the application snapshot in this repository. See [release provenance](docs/implementation/OPERATIONS.md#hosted-release-and-repository) before deploying a separate copy.
+The panel guide describes the hosted release reviewed on **12 September 2026**. The application source includes the hosted team controls, shared setup-assistant access, delivery-contention fix and visible configured model. See [release provenance](docs/implementation/OPERATIONS.md#hosted-release-and-repository) before deploying a separate copy.
 
 Provider credentials, personal answers and private calendar exports must stay out of GitHub. The repository's hosting manifest deliberately omits the identity of the existing private deployment.
 
