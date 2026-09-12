@@ -6,7 +6,7 @@
 
 The panel at [primtal-agent.aicreatormax.chatgpt.site](https://primtal-agent.aicreatormax.chatgpt.site) runs online. Participants do not need a local server or tunnel.
 
-Documentation and application source were reviewed against hosted source `0c78b9420810c8dbaa4d9fc2bcbfcaffb17f4bec` on **12 September 2026**. The repository includes the hosted team controls and shared setup-assistant access as well as the delivery-contention fix and visible model status. Provider credentials, participant data and live sharing permissions remain separate runtime configuration.
+Documentation and application source were reviewed against hosted source `4e808ecb0bd0443733dcabadc88a1c7071495af9` on **12 September 2026**. The repository includes the hosted team controls and shared setup-assistant access as well as the delivery-contention fix and visible model status. Provider credentials, participant data and live sharing permissions remain separate runtime configuration.
 
 The live site currently has owner-only access. Hosting access must be granted separately from Ambiguous workspace membership and GitHub access. Publishing a GitHub change is not, by itself, proof that the hosted application has changed.
 
@@ -33,7 +33,7 @@ The bot remains online when the owner's computer is off. Minute scheduling, mess
 
 OpenRouter credentials are entered through the owner form; the application reads the encrypted stored connection. There is no participant requirement to supply a separate key.
 
-The configured default model is `dots-studio/dots-3-note-preview:free`; the source also defines `nex-agi/nex-n2.5-mini:free` and `google/gemma-4-26b-a4b-it:free` as candidates for the owner's model-selection routine. This is a source configuration, not a claim that either endpoint is currently available. The saved model may differ from the default. Calls enforce zero-price provider limits, disable reasoning and have a 12-second request timeout; there is no paid fallback. The panel shows the saved model identifier and has no end-user model picker. The protected owner model-selection operation validates connectivity and three routing samples before saving the requested free model; this is a smoke check, not clinical validation. The [OpenRouter model page](https://openrouter.ai/dots-studio/dots-3-note-preview:free) currently lists 30 September 2026 as the retirement date for the Dots free preview.
+The configured default model is `dots-studio/dots-3-note-preview:free`; the source also defines `nex-agi/nex-n2.5-mini:free` and `google/gemma-4-26b-a4b-it:free` as candidates for the owner's model-selection routine. This is a source configuration, not a claim that either endpoint is currently available. The saved model may differ from the default. Calls enforce zero-price provider limits, disable reasoning and have a 12-second request timeout; there is no paid fallback. The panel shows the saved model identifier and has no end-user model picker. The protected owner model-selection operation validates connectivity and three routing samples before saving the requested free model; this is a smoke check, not clinical validation. Validation also reports request timings and failures; daily choices do not use this path. The [OpenRouter model page](https://openrouter.ai/dots-studio/dots-3-note-preview:free) currently lists 30 September 2026 as the retirement date for the Dots free preview.
 
 ## Contributor commands
 
